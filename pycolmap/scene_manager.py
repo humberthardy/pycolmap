@@ -354,7 +354,7 @@ class SceneManager:
                 fid.write(image.q.q.tobytes())
                 fid.write(image.tvec.tobytes())
                 fid.write(struct.pack('I', image.camera_id))
-                fid.write(image.name + '\0')
+                fid.write(image.name.encode('utf8') + '\0')
                 fid.write(struct.pack('L', len(image.points2D)))
                 data = np.rec.fromarrays(
                     (image.points2D[:,0], image.points2D[:,1], image.point3D_ids))
