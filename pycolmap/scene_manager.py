@@ -314,7 +314,7 @@ class SceneManager:
 
             camera_struct = struct.Struct('IiLL')
 
-            for camera_id, camera in sorted(self.cameras.iteritems()):
+            for camera_id, camera in sorted(self.cameras.items()):
                 fid.write(camera_struct.pack(
                     camera_id, camera.camera_type, camera.width, camera.height))
                 # TODO (True): should move this into the Camera class
@@ -326,7 +326,7 @@ class SceneManager:
             print>>fid, '#   CAMERA_ID, MODEL, WIDTH, HEIGHT, PARAMS[]'
             print>>fid, '# Number of cameras:', len(self.cameras)
 
-            for camera_id, camera in sorted(self.cameras.iteritems()):
+            for camera_id, camera in sorted(self.cameras.items()):
                 print>>fid, camera_id, camera
 
     #---------------------------------------------------------------------------
@@ -349,7 +349,7 @@ class SceneManager:
         with open(output_file, 'wb') as fid:
             fid.write(struct.pack('L', len(self.images)))
 
-            for image_id, image in self.images.iteritems():
+            for image_id, image in self.images.items():
                 fid.write(struct.pack('I', image_id))
                 fid.write(image.q.q.tobytes())
                 fid.write(image.tvec.tobytes())
@@ -368,7 +368,7 @@ class SceneManager:
             print>>fid, '# Number of images: {},'.format(len(self.images)),
             print>>fid, 'mean observations per image: unknown'
 
-            for image_id, image in self.images.iteritems():
+            for image_id, image in self.images.items():
                 print>>fid, image_id,
                 print>>fid, ' '.join(str(qi) for qi in image.q.q),
                 print>>fid, ' '.join(str(ti) for ti in image.tvec),
@@ -404,7 +404,7 @@ class SceneManager:
             if point3D_idx != SceneManager.INVALID_POINT3D)
 
         iter_point3D_id_to_point3D_idx = \
-            self.point3D_id_to_point3D_idx.iteritems()
+            self.point3D_id_to_point3D_idx.items()
 
         with open(output_file, 'wb') as fid:
             fid.write(struct.pack('L', num_valid_points3D))
@@ -429,7 +429,7 @@ class SceneManager:
         array_to_string = lambda arr: ' '.join(str(x) for x in arr)
 
         iter_point3D_id_to_point3D_idx = \
-            self.point3D_id_to_point3D_idx.iteritems()
+            self.point3D_id_to_point3D_idx.items()
 
         with open(output_file, 'w') as fid:
             print>>fid, '# 3D point list with one line of data per point:'
@@ -571,12 +571,12 @@ class SceneManager:
             if image_id in self.images:
                 del self.images[image_id]
 
-        keep_set = set(self.images.iterkeys())
+        keep_set = set(self.images.keys())
 
         # delete references to specified images, and ignore any points that are
         # invalidated
         iter_point3D_id_to_point3D_idx = \
-            self.point3D_id_to_point3D_idx.iteritems()
+            self.point3D_id_to_point3D_idx.items()
 
         for point3D_id, point3D_idx in iter_point3D_id_to_point3D_idx:
             if point3D_idx == SceneManager.INVALID_POINT3D:
@@ -608,7 +608,7 @@ class SceneManager:
             min_tri_prod = np.cos(np.radians(max_tri_angle))
 
         iter_point3D_id_to_point3D_idx = \
-            self.point3D_id_to_point3D_idx.iteritems()
+            self.point3D_id_to_point3D_idx.items()
 
         image_ids = []
 
@@ -659,7 +659,7 @@ class SceneManager:
     # scene graph: {image_id: [image_id: #shared points]}
     def build_scene_graph(self):
         self.scene_graph = defaultdict(lambda: defaultdict(int))
-        point3D_iter = self.point3D_id_to_images.iteritems()
+        point3D_iter = self.point3D_id_to_images.items()
 
         for i, (point3D_id, images) in enumerate(point3D_iter):
             if not self.point3D_valid(point3D_id):
